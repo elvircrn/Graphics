@@ -29,16 +29,15 @@ void Transform::up(float degrees, vec3 &eye, vec3 &up) {
   eye = rotate(degrees, rotationAxis) * eye;
 }
 
-// Your implementation of the glm::lookAt matrix
+// Your implementation of the glm::lookAt matrixg
 mat4 Transform::lookAt(vec3 eye, vec3 up) {
   vec3 rotationAxis = glm::normalize(glm::cross(up, eye));
-  mat3 r = mat3(1);
-      /*rotate(0, up) *
-      rotate(0, eye) *
-      rotate(0, rotationAxis);*/
-  return glm::inverse(mat4{{r[0][0], r[0][1], r[0][2], 7},
-          {r[1][0], r[1][1], r[1][2], 0},
-          {r[2][0], r[2][1], r[2][2], 0},
+  auto z = glm::normalize(eye);
+  auto x = glm::normalize(glm::cross(up, eye));
+  auto y = glm::normalize(glm::cross(z, x));
+  return glm::transpose(mat4{{x.x, y.x, z.x, -glm::dot(eye, x)},
+          {x.y, y.y, z.y, -glm::dot(eye, y)},
+          {x.z, y.z, z.z, -glm::dot(eye, z)},
           {0, 0, 0, 1}});
 }
 
